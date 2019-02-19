@@ -75,43 +75,110 @@ router.post('/new/:projectId', async (req, res) => {
 });
 
 // R - Read
-router.get('/', (req, res) => {
-    
-    res
-        .status(200)
-        .json({
-            operation: 'GET',
-            url: '/api/actions/'
-        });
+router.get('/', async (req, res) => {
+    try {
+        const records = db.get();
+
+        records ?
+            res
+                .status(200)
+                .json(records)
+            :
+            res
+                .status(404)
+                .json({
+                    errorMessage: 'There are no actions to be found'
+                });
+    } catch (err) {
+        res
+            .status(500)
+            .json({
+                errorMessage: 'Houston, we have a problem'
+            });
+    }
 });
 
-router.get('/:id', (req, res) => {
-    res
-        .status(200)
-        .json({
-            operation: 'GET',
-            url: '/api/actions/:id'
-        });
+router.get('/:id', async (req, res) => {
+    const {
+        id
+    } = req.params;
+    let record = null;
+
+    try {
+        record = await db.get(id);
+
+        record ?
+            res
+            .status(200)
+            .json(record) :
+            res
+            .status(404)
+            .json({
+                errorMessage: 'There was no action found'
+            });
+    } catch (err) {
+        res
+            .status(500)
+            .json({
+                errorMessage: 'Houston, we have a problem',
+                error: err
+            });
+    }
 });
 
 // U - Update
-router.put('/:id', (req, res) => {
-    res
-        .status(200)
-        .json({
-            operation: 'PUT',
-            url: '/api/actions/:id'
-        });
+router.put('/:id', async (req, res) => {
+    const { id } = req.params;
+    const updates = req.body;
+
+    try {
+        let updatedRecord = await db.update(id, updates);
+
+        updatedRecord ?
+            res
+            .status(200)
+            .json(updatedRecord) :
+            res
+            .status(404)
+            .json({
+                errorMessage: 'Updates can only be applied to an existing record'
+            })
+    } catch (err) {
+        res
+            .status(500)
+            .json({
+                errorMessage: 'Houston, we have a problem'
+            });
+    }
 });
 
 // D - Destroy
-router.delete('/:id', (req, res) => {
-    res
-        .status(200)
-        .json({
-            operation: 'DELETE',
-            url: '/api/actions/:id'
-        });
+router.delete('/:id', async (req, res) => {
+    const {
+        id
+    } = req.params;
+
+    try {
+        const deleted = await db.remove(id);
+
+        deleted ?
+            res
+            .status(200)
+            .json({
+                deleted
+            }) :
+            res
+            .status(500)
+            .json({
+                errorMessage: 'There was an error processing your request'
+            });
+    } catch (err) {
+        res
+            .status(500)
+            .json({
+                errorMessage: 'Houston, we have a problem'
+            });
+    }
 });
 
 router.use('/', (req, res) => res.send('Welcome to the Action API'));
