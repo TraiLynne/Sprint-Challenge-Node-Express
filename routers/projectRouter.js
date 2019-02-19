@@ -110,6 +110,40 @@ router.get('/:id', async (req, res) => {
     }
 });
 
+router.get('/:id/actions', async (req, res) => {
+    const { id } = req.params;
+    let project = null;
+
+    try {
+        project = await db.get(id);
+        let actions = await db.getProjectActions(id);
+
+        project ?
+            actions.length > 0 ?
+                res
+                    .status(200)
+                    .json(actions)
+                :
+                res
+                    .status(204)
+                    .json({
+                        errorMessage: 'There were no actions found for this post'
+                    })
+            :
+            res
+                .status(404)
+                .json({
+                    errorMessage: 'There was no project located'
+                });
+    } catch (err) {
+        res
+            .status(500)
+            .json({
+                errorMessage: 'Houston, we have a problem'
+            });
+    }
+});
+
 // U - Update
 router.put('/:id', (req, res) => {
     res
@@ -117,7 +151,7 @@ router.put('/:id', (req, res) => {
         .json({
             operation: 'PUT',
             url: '/api/projects/:id'
-        });
+        }); 
 });
 
 // D - Destroy
