@@ -24,15 +24,25 @@ In this challenge, create a web API around the following resources: `Projects` a
 
 Demonstrate your understanding of this Sprint's concepts by answering the following free-form questions. Edit this document to include your answers after each question. Make sure to leave a blank line above and below your answer so it is clear and easy to read by your project manager.
 
-- [ ] Mention two parts of Express that you learned about this week.
+- [x] Mention two parts of Express that you learned about this week.
 
-- [ ] Describe Middleware?
+    This week we learned about Middleware and Routing.
 
-- [ ] Describe a Resource?
+- [x] Describe Middleware?
 
-- [ ] What can the API return to help clients know if a request was successful?
+    Middleware is the main feature of Express. It is most of the code we as developers write in Express including our routes. Middleware can be thought of like an assembly line. It takes in the request and response objects then passes them along through an array of functions. It can change the request and response objects but it does not have to. Common middleware includes logging and authentication middleware. There are three types of middleware. There is the built-in middleware that comes prepacked with Express but not necessarily used out the box. These usually require minor tweaks to get up and running. There is also third-party middleware found in NPM modules. These have to be installed using yarn or npm then imported using require(). There is usually already code written for what developers try to do in an application. The last kind is the custom middleware. For those times that there just isn't the right third-party or built-in middleware, you can always just build it. I mean we are developers.  
 
-- [ ] How can we partition our application into sub-applications?
+- [x] Describe a Resource?
+
+    Resources are the things that the application actually cares about. They are kind of like the nouns of the application. Pieces of data passed around from servers and clients such as users or products or orders.
+
+- [x] What can the API return to help clients know if a request was successful?
+
+    AN API returns status codes (usually 200) to the clients to let them know a request was successful. 
+
+- [x] How can we partition our application into sub-applications?
+
+    I believe this is talking about how we can create subfolders for the different routes. Like creating a users directory to hold userRoutes and pets folder to hold petRoutes. We can have one main router that organizes all those sub-routers. Or we can have a React App that serves up our API and the SPA.
 
 ## Project Setup
 
