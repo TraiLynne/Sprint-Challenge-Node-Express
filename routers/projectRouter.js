@@ -125,7 +125,7 @@ router.get('/:id/actions', async (req, res) => {
                     .json(actions)
                 :
                 res
-                    .status(204)
+                    .status(404)
                     .json({
                         errorMessage: 'There were no actions found for this post'
                     })
@@ -145,13 +145,29 @@ router.get('/:id/actions', async (req, res) => {
 });
 
 // U - Update
-router.put('/:id', (req, res) => {
-    res
-        .status(200)
-        .json({
-            operation: 'PUT',
-            url: '/api/projects/:id'
-        }); 
+router.put('/:id', async (req, res) => {
+    const { id } = req.params;
+    const updates = req.body;
+    try {
+        let updatedRecord = await db.update(id, updates);
+
+        updatedRecord ?
+            res
+                .status(200)
+                .json(updatedRecord)
+            :
+            res
+                .status(404)
+                .json({
+            errorMessage: 'Updates can only be applied to an existing record'
+        })
+    } catch (err) {
+        res
+            .status(500)
+            .json({
+                errorMessage: 'Houston, we have a problem'
+            });
+    }
 });
 
 // D - Destroy
