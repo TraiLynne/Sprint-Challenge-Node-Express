@@ -60,13 +60,27 @@ router.post('/', async (req, res) => {
 });
 
 // R - Read
-router.get('/', (req, res) => {
-    res
-        .status(200)
-        .json({
-            operation: 'GET',
-            url: '/api/projects/'
-        });
+router.get('/', async (req, res) => {
+    try {
+        const allRecords = await db.get();
+
+        allRecords.length > 0 ?
+            res
+                .status(200)
+                .json(allRecords)
+            :
+            res
+                .status(404)
+                .json({
+                    errorMessage: 'There are no Projects found'
+                });
+    } catch (err) {
+        res
+            .status(500)
+            .json({
+                errorMessage: 'Houston, we have a problem'
+            });
+    }
 });
 
 router.get('/:id', (req, res) => {
