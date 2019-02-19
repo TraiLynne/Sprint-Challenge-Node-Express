@@ -83,13 +83,31 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/:id', (req, res) => {
-    res
-        .status(200)
-        .json({
-            operation: 'GET',
-            url: '/api/projects/:id'
-        });
+router.get('/:id', async (req, res) => {
+    const { id } = req.params;
+    let record = null;
+
+    try {
+        record = await db.get(id);
+
+        record ?
+            res
+                .status(200)
+                .json(record)
+            :
+            res
+                .status(404)
+                .json({
+                    errorMessage: 'There was no project found'
+                });
+    } catch (err) {
+        res
+            .status(500)
+            .json({
+                errorMessage: 'Houston, we have a problem',
+                error: err
+            });
+    }
 });
 
 // U - Update
